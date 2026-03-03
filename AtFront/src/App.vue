@@ -1,6 +1,7 @@
 <template>
   <div class="job-list">
     <h1>Applied positions</h1>
+    <button class="add-btn" @click="showModal = true">+</button>
     <div 
         v-for="job in jobs"
         :key="job.id"
@@ -12,6 +13,25 @@
       <p>{{job.dateApplied}}</p>
   </div>
 </div>
+
+<div v-if="showModal" class="modal-overlay">
+  <div class="modal">
+    <h2>Add new Application</h2>
+
+    <h4>Company</h4>
+    <input v-model="newJob.company" placeholder="Company">
+    <h4>Role</h4>
+    <input v-model="newJob.role" placeholder="role">
+
+    <div class="modal-actions">
+      <button @click="addjob">Save</button>
+      <button @click="showModal = false">Cancel</button>
+    </div>
+  </div>
+
+
+</div>
+
 </template>
 
 <style scoped>
@@ -51,10 +71,76 @@
 .job-card.rejected {
   background-color: red;
 }
+
+.add-btn {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: gray;
+  color: black;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 </style>
 
 <script setup lang="ts">
 import {ref} from 'vue';
+
+const showModal = ref(false);
+
+const newJob = ref({
+  company: '',
+  role: '',
+  url: '',
+  status: '',
+  dateApplied: '',
+  description: '',
+  stack: []
+})
+
+const addjob = () => {
+  jobs.value.push({
+    id: Date.now(),
+    ...newJob.value
+  })
+
+  newJob.value = {
+    company: '',
+    role: '',
+    url: '',
+    status: '',
+    dateApplied: '',
+    description: '',
+    stack: [],
+  }
+
+  showModal.value = false;
+}
 
 const jobs = ref([
   {id: 1,
