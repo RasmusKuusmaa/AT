@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div class="job-list">
     <h1>Applied positions</h1>
     <div 
       v-for="job in jobs"
       :key="job.id"
+      class="job-card"
       >
       <h2> {{job.company}} - {{job.role}}</h2>
       <p>{{job.url}}</p>
@@ -14,7 +15,27 @@
 </template>
 
 <style scoped>
+  .job-list {
+    width: 20rem;
+    margin: 0 auto;
+    padding: 1rem;
 
+  }
+  
+  .job-card{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: yellow;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.7);
+     transition: transform 0.1s ease-in-out;
+  }
+
+  .job-card:hover {
+    transform: scale(1.01) translateY(-0.4rem) translateX(0.4rem);
+    cursor: pointer;
+  }
 </style>
 
 <script setup lang="ts">
