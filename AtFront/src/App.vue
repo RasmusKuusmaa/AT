@@ -1,11 +1,12 @@
 <template>
   <div class="job-list">
     <h1>Applied positions</h1>
-    <button class="add-btn" @click="showModal = true">+</button>
+    <button class="add-btn" @click="showAddModal = true">+</button>
     <div 
         v-for="job in jobs"
         :key="job.id"
         :class="['job-card', job.status.toLowerCase()]"
+        @click="openDescription(job)"
       >
       <h2> {{job.company}} - {{job.role}}</h2>
       <p>{{job.url}}</p>
@@ -14,8 +15,8 @@
   </div>
 </div>
 
-<div v-if="showModal" class="modal-overlay">
-  <div class="modal">
+<div v-if="showAddModal" class="modal-overlay">
+  <div class="Addmodal">
     <h2>Add new Application</h2>
 
     <h4>Company</h4>
@@ -25,13 +26,33 @@
 
     <div class="modal-actions">
       <button @click="addjob">Save</button>
-      <button @click="showModal = false">Cancel</button>
+      <button @click="showAddModal = false">Cancel</button>
     </div>
   </div>
 
-
 </div>
 
+<div v-if="showDescriptionModal" class="modal-overlay">
+  <div class="descriptionModal" @click.stop>
+    <h2>{{selectedJob?.company}} - {{selectedJob?.role}}</h2>
+
+    <p><strong>Status: </strong>{{selectedJob?.status}}</p>
+    <p><strong>Date Applied: </strong>{{selectedJob?.dateApplied}}</p>
+    <p><strong>URL: </strong>{{selectedJob?.url}}</p>
+    
+    <p><strong>Description:</strong></P>
+    <p>{{selectedJob?.description}}</p>
+
+    <p><strong>Stack:</strong></p>
+    <ul>
+      <li v-for="tech in selectedJob?.stack" :key="tech">
+        {{tech}}
+      </li>
+    </ul>
+
+    <button @click="showDescriptionModal = false">Close</button>
+  </div>
+</div>
 </template>
 
 <style scoped>
@@ -97,7 +118,7 @@
   align-items: center;
 }
 
-.modal {
+.Addmodal {
   background: white;
   padding: 2rem;
   border-radius: 8px;
@@ -106,12 +127,28 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+.descriptionModal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px; 
+  width: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  }
 </style>
 
 <script setup lang="ts">
 import {ref} from 'vue';
 
-const showModal = ref(false);
+const showAddModal = ref(false);
+const showDescriptionModal = ref(false);
+const selectedJob = ref(null);
+
+const openDescription = (job) => {
+  selectedJob.value = job;
+  showDescriptionModal.value = true;
+}
 
 const newJob = ref({
   company: '',
@@ -139,7 +176,7 @@ const addjob = () => {
     stack: [],
   }
 
-  showModal.value = false;
+  showAddModal.value = false;
 }
 
 const jobs = ref([
