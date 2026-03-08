@@ -45,7 +45,7 @@
 
     <p><strong>Stack:</strong></p>
     <ul>
-      <li v-for="tech in selectedJob?.stack" :key="tech">
+      <li v-for="tech in selectedJob?.stack || []" :key="tech">
         {{tech}}
       </li>
     </ul>
